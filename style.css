@@ -560,3 +560,32 @@ body {
     font-weight: 500;
     color: var(--primary-color);
 }
+/* Add these styles for the new application inbox */
+.inbox-section {
+    margin-top: 1rem;
+}
+
+.application-inbox-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.application-inbox-item:last-child {
+    border-bottom: none;
+}
+
+.application-inbox-item .icon {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.application-inbox-info .job-title {
+    font-weight: 500;
+}
+
+.application-inbox-info .applicant-info {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
