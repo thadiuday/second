@@ -130,173 +130,7 @@ body {
     color: white;
 }
 
-/* === START: PHONEPE THEME STYLES === */
-.phonepe-theme {
-    background-color: #1c1c1e; /* Dark background */
-    color: #f2f2f7;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.phonepe-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.8rem 1.2rem;
-    background: #2c2c2e; /* Slightly lighter dark for header */
-}
-
-.phonepe-header .back-arrow, .phonepe-header .header-icon {
-    font-size: 1.3rem;
-    cursor: pointer;
-    color: #f2f2f7;
-}
-
-.phonepe-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.phonepe-header-info {
-    flex-grow: 1;
-}
-
-.phonepe-header-info .name {
-    font-weight: 500;
-    font-size: 1.1rem;
-}
-
-.phonepe-header-info .subtext {
-    font-size: 0.8rem;
-    color: #8e8e93;
-}
-
-.phonepe-header-icons {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.phonepe-messages {
-    flex-grow: 1;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    overflow-y: auto;
-}
-
-.phonepe-bubble {
-    padding: 0.6rem 1rem;
-    border-radius: 18px;
-    max-width: 75%;
-    position: relative;
-    line-height: 1.4;
-}
-
-.phonepe-bubble.sent {
-    background: #303030; /* Darker bubble for sent messages */
-    color: #f2f2f7;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-}
-
-.phonepe-bubble.received {
-    background: #2c2c2e;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-}
-
-.phonepe-bubble .time {
-    font-size: 0.7rem;
-    color: #8e8e93;
-    margin-top: 4px;
-    text-align: right;
-    display: block;
-}
-
-.phonepe-input-area {
-    display: flex;
-    align-items: center;
-    padding: 0.8rem;
-    background: #2c2c2e;
-}
-
-.phonepe-input-area .icon-btn {
-    font-size: 1.4rem;
-    color: #8e8e93;
-    padding: 0.5rem;
-    cursor: pointer;
-}
-
-.phonepe-input-area input {
-    flex-grow: 1;
-    background: #3a3a3c;
-    border: none;
-    border-radius: 20px;
-    padding: 0.8rem 1.2rem;
-    color: #f2f2f7;
-    font-size: 1rem;
-    margin: 0 0.5rem;
-}
-.phonepe-input-area input::placeholder {
-    color: #8e8e93;
-}
-
-.phonepe-input-area .send-btn {
-    background: var(--primary-color);
-    color: white;
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-/* Transaction bubble */
-.transaction-bubble {
-    background: #2c2c2e;
-    border-radius: 12px;
-    padding: 1rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    max-width: 70%;
-}
-.transaction-bubble.sent {
-    align-self: flex-end;
-}
-.transaction-bubble.received {
-    align-self: flex-start;
-}
-.transaction-bubble .logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background-color: #3a3a3c;
-    font-weight: 700;
-}
-.transaction-info .amount {
-    font-weight: 700;
-    font-size: 1.2rem;
-}
-.transaction-info .status {
-    font-size: 0.9rem;
-    color: #8e8e93;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-.transaction-info .status .success-icon {
-    color: #34c759; /* Green for success */
-    font-size: 0.8rem;
-}
-
-/* Chat List Update to match screenshot */
+/* Chat Pages */
 .chat-list-item {
     display: flex;
     align-items: center;
@@ -312,19 +146,231 @@ body {
     flex-grow: 1;
 }
 .chat-info .name {
-    font-weight: 500;
-    font-size: 1.1rem;
+    font-weight: 700;
 }
 .chat-info .last-message {
     font-size: 0.9rem;
     color: var(--text-light);
 }
 .chat-meta .time {
-    font-size: 0.8rem;
+     font-size: 0.8rem;
     color: var(--text-light);
 }
 
-/* === END: PHONEPE THEME STYLES === */
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1.2rem;
+    background: var(--card-background);
+    border-bottom: 1px solid var(--border-color);
+}
+.chat-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.chat-header-info {
+    flex-grow: 1;
+}
+.chat-header-info .name { font-weight: 700; }
+.chat-header-info .status { font-size: 0.8rem; color: #28a745; }
+.chat-header .icon { font-size: 1.2rem; margin-left: 1rem; cursor: pointer; }
 
-/* Other existing styles remain below... */
-/* (The rest of your CSS file) */
+.chat-messages {
+    flex-grow: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    overflow-y: auto;
+}
+.message-bubble {
+    padding: 0.8rem 1rem;
+    border-radius: 18px;
+    max-width: 75%;
+    position: relative;
+}
+.message-bubble.sent {
+    background: var(--gradient);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+.message-bubble.received {
+    background: #e9ecef;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+.message-time {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin-top: 4px;
+    text-align: right;
+}
+.message-bubble.sent .message-time { color: rgba(255,255,255,0.7); }
+
+.chat-input {
+    display: flex;
+    padding: 0.8rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--card-background);
+}
+.chat-input input {
+    flex-grow: 1;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 0.8rem 1.2rem;
+    margin-right: 0.5rem;
+}
+.chat-input .btn {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+}
+
+/* Payments Page */
+.transaction-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+.transaction-info {
+    flex-grow: 1;
+}
+.transaction-amount {
+    font-weight: 700;
+}
+.transaction-amount.income {
+    color: #28a745;
+}
+.transaction-amount.expense {
+    color: #dc3545;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* UPI Payment Modal */
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.modal-content {
+    background: var(--card-background);
+    width: 90%;
+    max-width: 400px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 1.2rem;
+}
+
+.modal-header .close-btn {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.upi-app-list {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.upi-app {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.upi-app:hover {
+    transform: scale(1.05);
+}
+
+.upi-app img {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.upi-app span {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.upi-processing-screen {
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.upi-processing-screen .spinner {
+    font-size: 3rem;
+    color: var(--primary-color);
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.upi-processing-screen .success-icon {
+    font-size: 4rem;
+    color: #28a745;
+}
+
+.upi-processing-screen h4 {
+    font-size: 1.3rem;
+}
+
+.upi-processing-screen p {
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+.upi-processing-screen .amount {
+    font-size: 2rem;
+    font-weight: 700;
+}
