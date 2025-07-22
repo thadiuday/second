@@ -536,3 +536,27 @@ body {
 .profile-links .link:hover {
     background: var(--background-color);
 }
+/* Add these styles to your existing style.css file */
+
+.location-filter {
+    background: var(--card-background);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+}
+.location-filter-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+.radius-slider {
+    width: 100%;
+    cursor: pointer;
+}
+.distance-display {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
