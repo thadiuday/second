@@ -1,17 +1,35 @@
-const { useState, useEffect } = React;
+const { useState, useEffect, useMemo } = React;
 
-// --- Mock Data ---
+// --- Haversine Formula for Distance Calculation ---
+// Calculates distance between two lat/lon points in miles.
+function getDistance(lat1, lon1, lat2, lon2) {
+    if ((lat1 === lat2) && (lon1 === lon2)) {
+        return 0;
+    }
+    const R = 3959; // Radius of the Earth in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in miles
+}
+
+
+// --- Mock Data with Latitude and Longitude ---
 const mockData = {
     workers: [
-        { id: 1, name: 'Sarah Johnson', profession: 'Professional Cleaner', rating: 4.9, experience: '5+ years', rate: 25, img: 'https://i.pravatar.cc/150?img=1' },
-        { id: 2, name: 'Mike Rodriguez', profession: 'Handyman & Electrician', rating: 4.8, experience: '8+ years', rate: 35, img: 'https://i.pravatar.cc/150?img=2' },
-        { id: 3, name: 'James Wilson', profession: 'Delivery & Moving', rating: 4.7, experience: '3+ years', rate: 20, img: 'https://i.pravatar.cc/150?img=3' },
-        { id: 4, name: 'Lisa Chen', profession: 'Garden Maintenance', rating: 4.9, experience: '6+ years', rate: 30, img: 'https://i.pravatar.cc/150?img=4' }
+        { id: 1, name: 'Sarah Johnson', profession: 'Professional Cleaner', rating: 4.9, experience: '5+ years', rate: 25, img: 'https://i.pravatar.cc/150?img=1', lat: 34.0522, lon: -118.2437 }, // Downtown LA
+        { id: 2, name: 'Mike Rodriguez', profession: 'Handyman & Electrician', rating: 4.8, experience: '8+ years', rate: 35, img: 'https://i.pravatar.cc/150?img=2', lat: 34.1522, lon: -118.4437 }, // 10 miles away
+        { id: 3, name: 'James Wilson', profession: 'Delivery & Moving', rating: 4.7, experience: '3+ years', rate: 20, img: 'https://i.pravatar.cc/150?img=3', lat: 33.9522, lon: -118.3437 }, // 8 miles away
+        { id: 4, name: 'Lisa Chen', profession: 'Garden Maintenance', rating: 4.9, experience: '6+ years', rate: 30, img: 'https://i.pravatar.cc/150?img=4', lat: 34.4522, lon: -118.7437 }, // 30 miles away
     ],
     jobs: [
-        { id: 1, title: 'House Cleaning Service', location: 'Downtown, 0.5 miles away', description: 'Need deep cleaning for 3-bedroom apartment. Includes kitchen, bathrooms, and living areas.', price: 120, duration: '4-5 hours' },
-        { id: 2, title: 'Furniture Assembly', location: 'Midtown, 1.2 miles away', description: 'IKEA wardrobe and dresser assembly. Tools will be provided.', price: 80, duration: '2-3 hours' },
-        { id: 3, title: 'Moving Help Required', location: 'Uptown, 2.1 miles away', description: 'Help with loading/unloading moving truck. Heavy lifting required, 2 people needed.', price: 200, duration: '6 hours' }
+        { id: 1, title: 'House Cleaning Service', description: 'Need deep cleaning for 3-bedroom apartment.', price: 120, duration: '4-5 hours', lat: 34.0592, lon: -118.2517 }, // ~1 mile away
+        { id: 2, title: 'Furniture Assembly', description: 'IKEA wardrobe and dresser assembly.', price: 80, duration: '2-3 hours', lat: 34.2522, lon: -118.5437 }, // ~18 miles away
+        { id: 3, title: 'Moving Help Required', description: 'Help with loading/unloading moving truck.', price: 200, duration: '6 hours', lat: 33.8522, lon: -118.1437 }, // ~12 miles away
     ],
     chats: {
         '1': [{ from: 'them', text: 'Hello! I\'m interested in your cleaning service.', time: '10:30 AM' }, { from: 'me', text: 'I\'d be happy to help. What kind of cleaning do you need?', time: '10:31 AM' }, { from: 'them', text: 'I need a deep cleaning for my 3-bedroom apartment.', time: '10:32 AM' }, { from: 'me', text: 'Perfect! I can do that. When would you like me to come?', time: '10:35 AM' }],
@@ -36,7 +54,7 @@ function App() {
 
     const navigateTo = (page) => {
         setActivePage(page);
-        setActivePopup(null); // Close any open popups on navigation
+        setActivePopup(null);
     };
 
     const togglePopup = (popup) => {
@@ -131,38 +149,60 @@ function BottomNav({ activePage, navigateTo }) {
 function FindWorkPage({ openChat }) {
     const [activeTab, setActiveTab] = useState('workers');
     const [showToast, setShowToast] = useState('');
+    // NEW: State for search radius and simulated user location
+    const [searchRadius, setSearchRadius] = useState(15); // Default radius: 15 miles
+    const userLocation = { lat: 34.0622, lon: -118.2537 }; // User's location (e.g., near Downtown LA)
 
     const displayToast = (message) => {
         setShowToast(message);
         setTimeout(() => setShowToast(''), 2000);
     };
 
+    // NEW: Memoized filtering logic. This recalculates only when searchRadius changes.
+    const filteredWorkers = useMemo(() => {
+        return mockData.workers.map(worker => ({
+            ...worker,
+            distance: getDistance(userLocation.lat, userLocation.lon, worker.lat, worker.lon)
+        })).filter(worker => worker.distance <= searchRadius);
+    }, [searchRadius]);
+
+    const filteredJobs = useMemo(() => {
+        return mockData.jobs.map(job => ({
+            ...job,
+            distance: getDistance(userLocation.lat, userLocation.lon, job.lat, job.lon)
+        })).filter(job => job.distance <= searchRadius);
+    }, [searchRadius]);
+
+
     return (
         <div>
-            <div className="card visual-search-card">
-                <h3>Visual Search</h3>
-                <div className="visual-search-buttons">
-                    <button className="btn btn-secondary"><i className="fa-solid fa-camera"></i> Take Photo</button>
-                    <button className="btn btn-secondary"><i className="fa-solid fa-upload"></i> Upload</button>
+            {/* NEW: Location filter UI */}
+            <div className="location-filter">
+                <div className="location-filter-header">
+                    <span>Search Radius</span>
+                    <span>{searchRadius} miles</span>
                 </div>
+                <input 
+                    type="range" 
+                    min="1" 
+                    max="50" 
+                    value={searchRadius}
+                    onChange={e => setSearchRadius(Number(e.target.value))}
+                    className="radius-slider"
+                />
             </div>
             
-            <div className="search-filters">
-                <button className="filter-btn">Location</button>
-                <button className="filter-btn">Price Range</button>
-                <button className="filter-btn">Group/Single</button>
-            </div>
-
             <div className="tabs">
-                <div className={`tab-btn ${activeTab === 'workers' ? 'active' : ''}`} onClick={() => setActiveTab('workers')}>Available Workers</div>
-                <div className={`tab-btn ${activeTab === 'jobs' ? 'active' : ''}`} onClick={() => setActiveTab('jobs')}>Find Jobs</div>
+                <div className={`tab-btn ${activeTab === 'workers' ? 'active' : ''}`} onClick={() => setActiveTab('workers')}>Available Workers ({filteredWorkers.length})</div>
+                <div className={`tab-btn ${activeTab === 'jobs' ? 'active' : ''}`} onClick={() => setActiveTab('jobs')}>Find Jobs ({filteredJobs.length})</div>
             </div>
-
-            {activeTab === 'workers' && mockData.workers.map(worker => (
+            
+            {/* UPDATED: Map over filtered lists instead of the original mockData */}
+            {activeTab === 'workers' && filteredWorkers.map(worker => (
                 <WorkerCard key={worker.id} worker={worker} openChat={openChat}/>
             ))}
             
-            {activeTab === 'jobs' && mockData.jobs.map(job => (
+            {activeTab === 'jobs' && filteredJobs.map(job => (
                 <JobCard key={job.id} job={job} displayToast={displayToast} />
             ))}
 
@@ -304,6 +344,7 @@ function PaymentsPage() {
 }
 
 // --- Card Components ---
+// UPDATED: Cards now receive and display the calculated distance
 function WorkerCard({ worker, openChat }) {
     return (
         <div className="card worker-card">
@@ -312,7 +353,8 @@ function WorkerCard({ worker, openChat }) {
                 <div className="name">{worker.name}</div>
                 <div className="profession">{worker.profession}</div>
                 <div className="profession">⭐ {worker.rating} ({worker.experience})</div>
-                <div style={{fontSize: '1.2rem', fontWeight: 700, color: '#28a745'}}>${worker.rate}/hr</div>
+                 <div className="distance-display">{worker.distance.toFixed(1)} miles away</div>
+                <div style={{fontSize: '1.2rem', fontWeight: 700, color: '#28a745', marginTop: '4px'}}>${worker.rate}/hr</div>
             </div>
             <div className="actions">
                 <button className="btn btn-secondary">Call</button>
@@ -327,8 +369,8 @@ function JobCard({ job, displayToast }) {
         <div className="card job-card">
             <div className="job-info">
                 <div className="title">{job.title}</div>
-                <div className="details">{job.location}</div>
-                <div className="details">{job.description}</div>
+                 <div className="distance-display">{job.distance.toFixed(1)} miles away</div>
+                <div className="details" style={{marginTop: '4px'}}>{job.description}</div>
                 <div style={{fontSize: '1.2rem', fontWeight: 700, color: '#28a745', marginTop: '8px'}}>${job.price} <span style={{color: '#777', fontSize: '0.9rem'}}>({job.duration})</span></div>
             </div>
             <div className="actions">
