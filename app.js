@@ -1,7 +1,6 @@
 const { useState, useEffect, useMemo } = React;
 
 // --- Haversine Formula for Distance Calculation ---
-// Calculates distance between two lat/lon points in miles.
 function getDistance(lat1, lon1, lat2, lon2) {
     if ((lat1 === lat2) && (lon1 === lon2)) {
         return 0;
@@ -20,25 +19,25 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 // --- Mock Data with Latitude and Longitude ---
 const mockData = {
+    // ... (existing worker, job, chat, etc. data remains unchanged)
     workers: [
-        { id: 1, name: 'Sarah Johnson', profession: 'Professional Cleaner', rating: 4.9, experience: '5+ years', rate: 25, img: 'https://i.pravatar.cc/150?img=1', lat: 34.0522, lon: -118.2437 }, // Downtown LA
-        { id: 2, name: 'Mike Rodriguez', profession: 'Handyman & Electrician', rating: 4.8, experience: '8+ years', rate: 35, img: 'https://i.pravatar.cc/150?img=2', lat: 34.1522, lon: -118.4437 }, // 10 miles away
-        { id: 3, name: 'James Wilson', profession: 'Delivery & Moving', rating: 4.7, experience: '3+ years', rate: 20, img: 'https://i.pravatar.cc/150?img=3', lat: 33.9522, lon: -118.3437 }, // 8 miles away
-        { id: 4, name: 'Lisa Chen', profession: 'Garden Maintenance', rating: 4.9, experience: '6+ years', rate: 30, img: 'https://i.pravatar.cc/150?img=4', lat: 34.4522, lon: -118.7437 }, // 30 miles away
+        { id: 1, name: 'Sarah Johnson', profession: 'Professional Cleaner', rating: 4.9, experience: '5+ years', rate: 25, img: 'https://i.pravatar.cc/150?img=1', lat: 34.0522, lon: -118.2437 },
+        { id: 2, name: 'Mike Rodriguez', profession: 'Handyman & Electrician', rating: 4.8, experience: '8+ years', rate: 35, img: 'https://i.pravatar.cc/150?img=2', lat: 34.1522, lon: -118.4437 },
+        { id: 3, name: 'James Wilson', profession: 'Delivery & Moving', rating: 4.7, experience: '3+ years', rate: 20, img: 'https://i.pravatar.cc/150?img=3', lat: 33.9522, lon: -118.3437 },
+        { id: 4, name: 'Lisa Chen', profession: 'Garden Maintenance', rating: 4.9, experience: '6+ years', rate: 30, img: 'https://i.pravatar.cc/150?img=4', lat: 34.4522, lon: -118.7437 },
     ],
     jobs: [
-        { id: 1, title: 'House Cleaning Service', description: 'Need deep cleaning for 3-bedroom apartment.', price: 120, duration: '4-5 hours', lat: 34.0592, lon: -118.2517 }, // ~1 mile away
-        { id: 2, title: 'Furniture Assembly', description: 'IKEA wardrobe and dresser assembly.', price: 80, duration: '2-3 hours', lat: 34.2522, lon: -118.5437 }, // ~18 miles away
-        { id: 3, title: 'Moving Help Required', description: 'Help with loading/unloading moving truck.', price: 200, duration: '6 hours', lat: 33.8522, lon: -118.1437 }, // ~12 miles away
+        { id: 1, title: 'House Cleaning Service', description: 'Need deep cleaning for 3-bedroom apartment.', price: 120, duration: '4-5 hours', lat: 34.0592, lon: -118.2517 },
+        { id: 2, title: 'Furniture Assembly', description: 'IKEA wardrobe and dresser assembly.', price: 80, duration: '2-3 hours', lat: 34.2522, lon: -118.5437 },
+        { id: 3, title: 'Moving Help Required', description: 'Help with loading/unloading moving truck.', price: 200, duration: '6 hours', lat: 33.8522, lon: -118.1437 },
     ],
     chats: {
-        '1': [{ from: 'them', text: 'Hello! I\'m interested in your cleaning service.', time: '10:30 AM' }, { from: 'me', text: 'I\'d be happy to help. What kind of cleaning do you need?', time: '10:31 AM' }, { from: 'them', text: 'I need a deep cleaning for my 3-bedroom apartment.', time: '10:32 AM' }, { from: 'me', text: 'Perfect! I can do that. When would you like me to come?', time: '10:35 AM' }],
+        '1': [{ from: 'them', text: 'Hello! I\'m interested in your cleaning service.', time: '10:30 AM' }, { from: 'me', text: 'I\'d be happy to help. What kind of cleaning do you need?', time: '10:31 AM' }],
         '3': [{ from: 'them', text: 'Hi, I need help moving some furniture next Saturday.', time: 'Yesterday' }, { from: 'me', text: 'Sure, I can help with that. What time works for you?', time: 'Yesterday' }],
     },
     notifications: [
         { id: 1, title: 'Job Completed', body: 'Sarah Johnson completed house cleaning service', time: '5 min ago', icon: 'fa-check-circle' },
         { id: 2, title: 'New Application', body: 'Mike Rodriguez applied for plumbing job', time: '15 min ago', icon: 'fa-user-plus' },
-        { id: 3, title: 'Payment Pending', body: 'Client payment for garden service is overdue', time: '1 hour ago', icon: 'fa-file-invoice-dollar' },
     ],
     applications: [
         { id: 1, name: 'Alex Thompson', profession: 'Electrical Repair', experience: '4.7 • 5 years', img: 'https://i.pravatar.cc/150?img=5' },
@@ -51,6 +50,8 @@ function App() {
     const [activePage, setActivePage] = useState('search');
     const [activePopup, setActivePopup] = useState(null);
     const [currentChatId, setCurrentChatId] = useState(null);
+    // NEW: State to hold submitted applications for the recruiter's inbox
+    const [receivedApplications, setReceivedApplications] = useState([]);
 
     const navigateTo = (page) => {
         setActivePage(page);
@@ -65,6 +66,26 @@ function App() {
         setCurrentChatId(workerId);
         setActivePage('chatDetail');
     };
+    
+    // NEW: Function to handle a new job application
+    const handleApplyForJob = (job) => {
+        const newApplication = {
+            id: Date.now(), // Unique ID for the application
+            jobTitle: job.title,
+            jobId: job.id,
+            applicantName: "John Smith (You)", // In a real app, this would be the logged-in user
+            date: new Date()
+        };
+        // Add the new application to the beginning of the list
+        setReceivedApplications(prev => [newApplication, ...prev]);
+        
+        // Also log to console to simulate an API call/email trigger
+        console.log("--- EMAIL SIMULATION ---");
+        console.log(`To: recruiter@example.com`);
+        console.log(`Subject: New Application for ${job.title}`);
+        console.log(`Body: A new application for the job "${job.title}" has been submitted by John Smith.`);
+        console.log("------------------------");
+    };
 
     const goBack = () => {
         if (currentChatId) {
@@ -75,12 +96,14 @@ function App() {
     
     const renderPage = () => {
         switch (activePage) {
-            case 'search': return <FindWorkPage openChat={openChat} />;
+            // UPDATED: Pass the handleApplyForJob function to the FindWorkPage
+            case 'search': return <FindWorkPage openChat={openChat} handleApplyForJob={handleApplyForJob} />;
             case 'chatList': return <ChatListPage openChat={openChat} />;
             case 'chatDetail': return <ChatDetailPage workerId={currentChatId} goBack={goBack} />;
-            case 'workspace': return <WorkspacePage />;
+            // UPDATED: Pass the receivedApplications state to the WorkspacePage
+            case 'workspace': return <WorkspacePage applications={receivedApplications} />;
             case 'payments': return <PaymentsPage />;
-            default: return <FindWorkPage openChat={openChat} />;
+            default: return <FindWorkPage openChat={openChat} handleApplyForJob={handleApplyForJob} />;
         }
     };
 
@@ -146,19 +169,24 @@ function BottomNav({ activePage, navigateTo }) {
 
 
 // --- Pages Components ---
-function FindWorkPage({ openChat }) {
+// UPDATED: Component now receives handleApplyForJob prop
+function FindWorkPage({ openChat, handleApplyForJob }) {
     const [activeTab, setActiveTab] = useState('workers');
     const [showToast, setShowToast] = useState('');
-    // NEW: State for search radius and simulated user location
-    const [searchRadius, setSearchRadius] = useState(15); // Default radius: 15 miles
-    const userLocation = { lat: 34.0622, lon: -118.2537 }; // User's location (e.g., near Downtown LA)
+    const [searchRadius, setSearchRadius] = useState(15);
+    const userLocation = { lat: 34.0622, lon: -118.2537 };
 
     const displayToast = (message) => {
         setShowToast(message);
         setTimeout(() => setShowToast(''), 2000);
     };
+    
+    // NEW: Combined function to show toast AND submit application
+    const onApply = (job) => {
+        handleApplyForJob(job);
+        displayToast('Application Submitted!');
+    };
 
-    // NEW: Memoized filtering logic. This recalculates only when searchRadius changes.
     const filteredWorkers = useMemo(() => {
         return mockData.workers.map(worker => ({
             ...worker,
@@ -176,7 +204,6 @@ function FindWorkPage({ openChat }) {
 
     return (
         <div>
-            {/* NEW: Location filter UI */}
             <div className="location-filter">
                 <div className="location-filter-header">
                     <span>Search Radius</span>
@@ -197,13 +224,13 @@ function FindWorkPage({ openChat }) {
                 <div className={`tab-btn ${activeTab === 'jobs' ? 'active' : ''}`} onClick={() => setActiveTab('jobs')}>Find Jobs ({filteredJobs.length})</div>
             </div>
             
-            {/* UPDATED: Map over filtered lists instead of the original mockData */}
             {activeTab === 'workers' && filteredWorkers.map(worker => (
                 <WorkerCard key={worker.id} worker={worker} openChat={openChat}/>
             ))}
             
+            {/* UPDATED: Pass the new onApply function to JobCard */}
             {activeTab === 'jobs' && filteredJobs.map(job => (
-                <JobCard key={job.id} job={job} displayToast={displayToast} />
+                <JobCard key={job.id} job={job} displayToast={displayToast} onApply={onApply} />
             ))}
 
             {showToast && <div className="toast">{showToast}</div>}
@@ -211,6 +238,7 @@ function FindWorkPage({ openChat }) {
     );
 }
 
+// ... ChatListPage and ChatDetailPage remain the same ...
 function ChatListPage({ openChat }) {
     return (
         <div>
@@ -278,41 +306,49 @@ function ChatDetailPage({ workerId, goBack }) {
     );
 }
 
-function WorkspacePage() {
+// UPDATED: WorkspacePage now receives and displays applications
+function WorkspacePage({ applications }) {
     return (
         <div>
             <div className="card workspace-summary">
                 <div className="summary-card">
-                    <div className="value">12</div>
-                    <div className="label">Total Workers</div>
+                    <div className="value">12</div> <div className="label">Total Workers</div>
                 </div>
                  <div className="summary-card">
-                    <div className="value">8</div>
-                    <div className="label">Active Jobs</div>
+                    <div className="value">8</div> <div className="label">Active Jobs</div>
                 </div>
                  <div className="summary-card">
-                    <div className="value">$15,420</div>
-                    <div className="label">Monthly Revenue</div>
+                    <div className="value">$15,420</div> <div className="label">Monthly Revenue</div>
                 </div>
                  <div className="summary-card">
-                    <div className="value">94%</div>
-                    <div className="label">Completion Rate</div>
+                    <div className="value">94%</div> <div className="label">Completion Rate</div>
                 </div>
             </div>
-            <div className="card">
-                <h3>Recent Activity</h3>
-                {/* Mocked activity */}
-            </div>
-            <div className="quick-actions">
-                <div className="action-btn"><i className="fa-solid fa-user-plus"></i> Add Worker</div>
-                <div className="action-btn"><i className="fa-solid fa-calendar-alt"></i> Schedule Job</div>
-                <div className="action-btn"><i className="fa-solid fa-dollar-sign"></i> View Payouts</div>
-                <div className="action-btn"><i className="fa-solid fa-chart-line"></i> Reports</div>
+
+            {/* NEW: Recruiter's Application Inbox */}
+            <div className="card inbox-section">
+                <div className="section-header">
+                    <h3>Recent Applications ({applications.length})</h3>
+                </div>
+                {applications.length > 0 ? applications.map(app => (
+                    <div key={app.id} className="application-inbox-item">
+                        <div className="icon"><i className="fa-solid fa-file-import"></i></div>
+                        <div className="application-inbox-info">
+                            <div className="job-title">{app.jobTitle}</div>
+                            <div className="applicant-info">
+                                New application from {app.applicantName} on {app.date.toLocaleDateString()}
+                            </div>
+                        </div>
+                    </div>
+                )) : (
+                    <p style={{color: '#777', textAlign: 'center', padding: '1rem'}}>No new applications.</p>
+                )}
             </div>
         </div>
     );
 }
 
+// ... PaymentsPage remains the same ...
 function PaymentsPage() {
     return (
         <div>
@@ -344,7 +380,6 @@ function PaymentsPage() {
 }
 
 // --- Card Components ---
-// UPDATED: Cards now receive and display the calculated distance
 function WorkerCard({ worker, openChat }) {
     return (
         <div className="card worker-card">
@@ -364,7 +399,8 @@ function WorkerCard({ worker, openChat }) {
     );
 }
 
-function JobCard({ job, displayToast }) {
+// UPDATED: JobCard now calls the onApply function when the button is clicked
+function JobCard({ job, displayToast, onApply }) {
     return (
         <div className="card job-card">
             <div className="job-info">
@@ -375,13 +411,13 @@ function JobCard({ job, displayToast }) {
             </div>
             <div className="actions">
                 <i className="fa-regular fa-bookmark" onClick={() => displayToast('Job Saved!')}></i>
-                <button className="btn btn-primary" onClick={() => displayToast('Application Submitted!')}>Apply Now</button>
+                <button className="btn btn-primary" onClick={() => onApply(job)}>Apply Now</button>
             </div>
         </div>
     )
 }
 
-// --- Popup Components ---
+// ... Popup components remain the same ...
 function NotificationPopup() {
     return (
         <div className="popup-overlay">
