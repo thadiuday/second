@@ -1,0 +1,538 @@
+:root {
+    --primary-color: #6a11cb;
+    --secondary-color: #2575fc;
+    --background-color: #f4f7f6;
+    --card-background: #ffffff;
+    --text-color: #333;
+    --text-light: #777;
+    --border-color: #e0e0e0;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --gradient: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overscroll-behavior: none;
+}
+
+#root {
+    max-width: 450px;
+    margin: auto;
+    background-color: var(--card-background);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main-header {
+    background: var(--gradient);
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    z-index: 10;
+}
+
+.main-header h1 {
+    font-size: 1.5rem;
+}
+
+.header-icons {
+    display: flex;
+    gap: 1.2rem;
+}
+
+.header-icons .icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.app-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1.2rem;
+    padding-bottom: 75px; /* Space for bottom nav */
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--card-background);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav-item i {
+    font-size: 1.5rem;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+}
+
+/* General Components */
+.card {
+    background: var(--card-background);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.btn {
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background: var(--gradient);
+    color: white;
+}
+
+.btn-secondary {
+    background: #e9ecef;
+    color: var(--text-color);
+}
+
+
+/* Find Work Page */
+.visual-search-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.visual-search-card h3 {
+    margin-bottom: 1rem;
+}
+
+.visual-search-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.visual-search-buttons .btn {
+    flex: 1;
+}
+
+.search-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.filter-btn {
+    background: #e9ecef;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.tabs {
+    display: flex;
+    margin: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    flex: 1;
+    padding-bottom: 0.8rem;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-light);
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.worker-card, .job-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.worker-card img, .job-card .job-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.job-card .job-icon {
+    display: grid;
+    place-items: center;
+    background: #e9ecef;
+}
+
+.worker-info, .job-info {
+    flex-grow: 1;
+}
+
+.worker-info .name, .job-info .title {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.worker-info .profession, .job-info .details {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.worker-card .actions, .job-card .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.job-card .actions {
+    align-self: flex-end;
+}
+.job-card .actions .btn{
+    width: 100px;
+}
+.job-card .actions i {
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+/* Chat Pages */
+.chat-list-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+.chat-list-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.chat-info {
+    flex-grow: 1;
+}
+.chat-info .name {
+    font-weight: 700;
+}
+.chat-info .last-message {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+.chat-meta .time {
+     font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1.2rem;
+    background: var(--card-background);
+    border-bottom: 1px solid var(--border-color);
+}
+.chat-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.chat-header-info {
+    flex-grow: 1;
+}
+.chat-header-info .name { font-weight: 700; }
+.chat-header-info .status { font-size: 0.8rem; color: #28a745; }
+.chat-header .icon { font-size: 1.2rem; margin-left: 1rem; cursor: pointer; }
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    overflow-y: auto;
+}
+.message-bubble {
+    padding: 0.8rem 1rem;
+    border-radius: 18px;
+    max-width: 75%;
+    position: relative;
+}
+.message-bubble.sent {
+    background: var(--gradient);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+.message-bubble.received {
+    background: #e9ecef;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+.message-time {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin-top: 4px;
+    text-align: right;
+}
+.message-bubble.sent .message-time { color: rgba(255,255,255,0.7); }
+
+.chat-input {
+    display: flex;
+    padding: 0.8rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--card-background);
+}
+.chat-input input {
+    flex-grow: 1;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 0.8rem 1.2rem;
+    margin-right: 0.5rem;
+}
+.chat-input .btn {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+}
+
+/* Workspace Page */
+.workspace-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    text-align: center;
+}
+.summary-card {
+    padding: 1rem;
+}
+.summary-card .value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.summary-card .label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.action-btn {
+    background-color: #e9ecef;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 12px;
+    gap: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.action-btn i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* Payments Page */
+.wallet-balance-card {
+    text-align: center;
+    background: var(--gradient);
+    color: white;
+    padding: 2rem;
+}
+.wallet-balance-card .balance {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.wallet-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1.5rem;
+}
+.wallet-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.wallet-action .icon-bg {
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+}
+.quick-send .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+.quick-send input {
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
+.transaction-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.transaction-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.transaction-info {
+    flex-grow: 1;
+}
+.transaction-amount {
+    font-weight: 700;
+}
+.transaction-amount.income {
+    color: #28a745;
+}
+.transaction-amount.expense {
+    color: #dc3545;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.section-header h3 {
+    font-size: 1.2rem;
+}
+
+/* Modals & Popups */
+.popup-overlay {
+    position: absolute;
+    top: 65px; /* Below header */
+    right: 1.5rem;
+    background: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    width: 300px;
+    z-index: 100;
+    overflow: hidden;
+}
+.popup-header {
+    padding: 1rem;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border-color);
+}
+.popup-content {
+    padding: 0.5rem 0;
+}
+.notification-item, .application-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: flex-start;
+}
+.notification-item i {
+    color: var(--primary-color);
+    margin-top: 4px;
+}
+.notification-text .title { font-weight: 500; }
+.notification-text .time { font-size: 0.8rem; color: var(--text-light); }
+.application-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.application-info {
+    flex-grow: 1;
+}
+.application-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.profile-popup .profile-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    gap: 0.5rem;
+}
+.profile-summary .initials {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gradient);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+.profile-summary .name { font-size: 1.2rem; font-weight: 700;}
+.profile-links .link {
+    display: block;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+}
+.profile-links .link:hover {
+    background: var(--background-color);
+}
